@@ -1,0 +1,5 @@
+# Ignoring compiled o files
+*.o
+
+# Ignoring the executable file
+*.exe
