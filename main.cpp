@@ -146,7 +146,10 @@ int main() {
 	glfwSwapInterval(1);
 
 	Camera camera(windowWidth, windowHeight, glm::vec3(0.0f, 0.2f, 5.0f));
-
+	
+	// Variables that help the rotation of the pyramid
+	float rotation = 0.0f;
+	double prevTime = glfwGetTime();
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -157,8 +160,15 @@ int main() {
 
 		// Clean the back buffer and assign the new color to it
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
+		
+		
+		// Simple timer
+		double crntTime = glfwGetTime();
+		if (crntTime - prevTime >= 1 / 60)
+		{
+			rotation += 0.5f;
+			prevTime = crntTime;
+		}
 
 		// Tell OpenGL which Shader Program we want to use
 		pyramidShaderProgram.Activate();
@@ -166,8 +176,12 @@ int main() {
 		camera.Inputs(window);
 
 		camera.gravityForce(window);
-
-		camera.Matrix(45.0f, 0.1f, 50.0f, pyramidShaderProgram, "camMatrix");
+		
+		// Initializes matrices so they are not the null matrix
+		glm::mat4 pyramidModel = glm::mat4(1.0f);
+		// Assigns different transformations to each matrix
+		pyramidModel = glm::rotate(pyramidModel, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+		camera.Matrix(pyramidModel,45.0f, 0.1f, 50.0f, pyramidShaderProgram, "camMatrix");
 
 		pyramidTexture.Bind();
 
@@ -186,8 +200,9 @@ int main() {
 		// Tell OpenGL which Shader Program we want to use
 		planeShaderProgram.Activate();
 
-
-		camera.Matrix(45.0f, 0.1f, 100.0f, planeShaderProgram, "camMatrix");
+		// Initializes matrices so they are not the null matrix
+		glm::mat4 planeModel = glm::mat4(1.0f);
+		camera.Matrix(planeModel,45.0f, 0.1f, 100.0f, planeShaderProgram, "camMatrix");
 		grassTecture.Bind();
 
 		// Bind the VAO so OpenGL knows to use it

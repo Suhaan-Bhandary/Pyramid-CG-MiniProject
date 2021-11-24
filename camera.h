@@ -34,7 +34,7 @@ public:
 
 	Camera(int width, int height, glm::vec3 position);
 
-	void Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
+	void Matrix(glm::mat4 model,float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
 	void Inputs(GLFWwindow* window);
 	void gravityForce(GLFWwindow* window);
 };
